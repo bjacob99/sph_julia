@@ -643,6 +643,8 @@ The means are stored in `variable.XXX_part` (if `is_on_grid == false`) or `varia
 `variable` in `variables`, where `XXX` refers to `"mean"`, `"gradx"`, `"grady"`, `"hessxx"`, `"hessxy"` and `"hessyy"` for the value
 of the mean variable, its gradient, and its hessian matrix.
 
+Basic multithreading with "Base.Threads.@threads :dynamic"
+
 ## Arguments:
 * `mean_computer` is the [`MeanComputer`](@ref) wrapping all relevant information for the kernel-means algorithm
 * `variables` is the set of [`MeanVariable`](@ref)s updated by the method
@@ -653,11 +655,15 @@ function standard_means!(mean_computer::MeanComputer, variables::MeanVariable...
     nvar = length(variables)
     npos = positions.npos
     aver, gradx, grady, hessxx, hessxy, hessyy = zeros(nvar, npos), zeros(nvar, npos), zeros(nvar, npos), zeros(nvar, npos), zeros(nvar, npos), zeros(nvar, npos)
-    for cell in mean_computer.small_cells
-        compute_rsum!(cell, mean_computer, variables...)
+
+    Base.Threads.@threads :dynamic for icell in eachindex(mean_computer.small_cells)
+        compute_rsum!(mean_computer.small_cells[icell], mean_computer, variables...)
     end
-    for (icell, cell) in enumerate(mean_computer.big_cells)
-        update_means_one_cell!(aver, gradx, grady, hessxx, hessxy, hessyy, mean_computer, cell, map_cells_to_positions[icell], is_on_grid=is_on_grid)
+
+    Base.Threads.@threads :dynamic for icell in eachindex(mean_computer.big_cells)
+        update_means_one_cell!(aver, gradx, grady, hessxx, hessxy, hessyy,
+                              mean_computer, mean_computer.big_cells[icell],
+                              map_cells_to_positions[icell]; is_on_grid=is_on_grid)
     end
     for (ivar, var) in enumerate(variables)
         if is_on_grid
@@ -676,10 +682,7 @@ function standard_means!(mean_computer::MeanComputer, variables::MeanVariable...
             var.hessyy_part .= @view hessyy[ivar,:]
         end
     end
-    aver = 0
-    gradx = 0
-    grady = 0
-    hessxx = 0
-    hessxy = 0
-    hessyy = 0
+    return nothing
 end
+
+
