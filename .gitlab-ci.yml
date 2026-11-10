@@ -1,0 +1,8 @@
+image: registry.gitlab.com/gitlab-org/gitlab-docs/archives:16.0
+pages:
+  script:
+    - mkdir public
+    - cp -a docs/build/* public/
+  artifacts:
+    paths:
+    - public

@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: lagrangian_post_treatment
+Version: 1.0
+Summary: Post-treatment routines for the Lagrangian Stochastic Convection code
+Author: Jordan Philidet
+Author-email: jordan.philidet@obspm.fr
+Requires-Python: >=3.8
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: matplotlib
+Requires-Dist: toml
+Requires-Dist: progress
+Dynamic: author
+Dynamic: author-email

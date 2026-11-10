@@ -1,0 +1,48 @@
+[paths]
+initial_directory = "None"
+output_directory = "/home/bjacob/SPH_routines/data/SLM/"
+
+[spatial]
+aspect_ratio = 6.0
+vertical_cells = 50
+horizontal_cells = 50
+number_modes = 7
+
+[time]
+number_time_steps = 2000
+time_step = 0.05
+alpha = 0.5
+beta = 0.5
+
+[particles]
+number_particles = 100000
+initial_turbulent_frequency = 0.1
+initial_velocity_std = 0.1
+initial_energy_std = 0.1
+is_frequency_fixed = true
+
+[output]
+vertical_grid_points = 100
+horizontal_grid_points = 100
+output_frequency = 1
+
+[physics]
+polytropic_index = 1.66
+first_adiabatic_index = 1.66
+gravity = 1.0
+radiative_diffusivity = 0
+is_incomp = false
+
+[boundary_conditions]
+type = "flux"
+energy_top = 1.0
+flux_bottom = 0.001
+
+[stochastic_constants]
+C0 = 3.5
+C1 = 3.5
+C2 = 0.5
+Cmu = 0.09
+Ceps1 = 1.45
+Ceps2 = 1.90
+
